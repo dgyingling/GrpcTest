@@ -1,0 +1,54 @@
+syntax = "proto3";  //指定该proto文件所采用的语法
+
+
+//指定proto文件生成的java类的包，可以不用指定，如果没有指定，将采用package的值
+option java_package = "model";
+
+/**
+ * 指定生产的java类的名字,如果没有指定，将使用proto文件的文件名作为类名.
+ * 如果文件名为 contact_address.proto, 生成的类名为ContactAddress.java
+ */
+option java_outer_classname = "Hello";
+
+/**
+ * 当为true的时候，表示将所有的message各自生成在一个java文件中;
+ * 当为false的时候，将所有的内容生成在同一个文件中
+ */
+option java_multiple_files = true;
+
+
+
+message InfoRequest {
+    string msg = 1;
+}
+
+message InfoResponse {
+   string infos = 1;
+}
+
+message GreetRequest {
+    string name = 1;
+}
+
+message GreetResponse {
+    string msg = 1;
+    string date = 2;
+}
+/**
+ * 指定服务，客户端和服务端的stub, 服务端需要实现接口，客户端直接调用该接口。
+ */
+service HelloService {
+    /**
+     * 指定方法，必须以rpc开头，方法名(GetUserById)按照官网所给出的示例代码，均是大写，所以我们也按照这种方式定义。
+     *         MyRequest为方法的参数，必须指定，并且必须为message类型。
+     *      MyResponse为方法的返回类型，必须制定，并且必须为message类型。
+     */
+
+    rpc GetInfos(InfoRequest) returns (InfoResponse);
+
+    //请求的参数为流
+    rpc Greeting(stream GreetRequest) returns (GreetResponse);
+
+    //请求的参数为流，响应的参数为流
+    rpc GreetingStream(stream GreetRequest) returns (stream GreetResponse);
+}
